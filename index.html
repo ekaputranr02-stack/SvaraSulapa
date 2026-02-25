@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ganti Gambar</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        #imageBox {
+            max-width: 350px;
+            border-radius: 10px;
+        }
+
+        /* Layar Start */
+        #startScreen {
+            background-image: url("screen.png");
+            background-size: cover;
+            background-position: center;
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        #mainContent {
+            display: none;
+        }
+
+        /* Tombol Exit kanan bawah */
+        #exitBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 20;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ========================== -->
+    <!--   START SCREEN             -->
+    <!-- ========================== -->
+    <div id="startScreen">
+        <button class="btn btn-lg btn-success" onclick="startApp()">START</button>
+    </div>
+
+    <!-- ========================== -->
+    <!--   MAIN CONTENT             -->
+    <!-- ========================== -->
+    <div id="mainContent" class="container mt-5">
+
+        <h2 class="text-center mb-4">Contoh Gambar Berubah</h2>
+
+        <div class="row justify-content-center">
+
+            <!-- Tombol di Kiri -->
+            <div class="col-md-3 text-center">
+                <button class="btn btn-primary w-100 mb-2" onclick="showImage('datar')">Datar</button>
+                <button class="btn btn-primary w-100 mb-2" onclick="showImage('a')">A</button>
+                <button class="btn btn-primary w-100 mb-2" onclick="showImage('i')">I</button>
+                <button class="btn btn-primary w-100 mb-2" onclick="showImage('u')">U</button>
+                <button class="btn btn-primary w-100 mb-2" onclick="showImage('e')">E</button>
+                <button class="btn btn-primary w-100 mb-2" onclick="showImage('o')">O</button>
+            </div>
+
+            <!-- Gambar di Tengah -->
+            <div class="col-md-4 text-center">
+                <img id="imageBox" src="gambar_datar.png" class="img-fluid" alt="gambar">
+            </div>
+
+            <!-- Deskripsi di Kanan -->
+            <div class="col-md-4">
+                <p id="descText" class="fs-5">Ini adalah deskripsi gambar pertama.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========================== -->
+    <!--   TOMBOL EXIT (KANAN BAWAH) -->
+    <!-- ========================== -->
+    <button id="exitBtn" class="btn btn-danger" onclick="exitApp()">EXIT</button>
+
+    <!-- ======================================== -->
+    <!--            AUDIO FILES                   -->
+    <!-- ======================================== -->
+
+    <!-- Suara tombol -->
+   // <audio id="sound_datar" src="datar.mp3"></audio>
+    <audio id="sound_a" src="a.mp3"></audio>
+    <audio id="sound_i" src="i.mp3"></audio>
+    <audio id="sound_u" src="u.mp3"></audio>
+    <audio id="sound_e" src="e.mp3"></audio>
+    <audio id="sound_o" src="o.mp3"></audio>
+
+    <!-- Musik Background (tidak autoplay sebelum start) -->
+    <audio id="bgMusic" src="music.mp3" loop preload="none"></audio>
+
+    <!-- ======================================== -->
+    <!--            BACKEND JAVASCRIPT            -->
+    <!-- ======================================== -->
+    <script>
+
+        // Data gambar + deskripsi + suara
+        const imageData = {
+    datar: { 
+        url: "gambar_datar.png", 
+        desc: "(1) Ekspresi datar. (2) Bibir relaks tanpa perubahan bentuk.", 
+        sound: "sound_datar"
+    },
+    a: { 
+        url: "gambar_a.png", 
+        desc: "(1) Mulut terbuka lebar vertikal. (2) Bibir relaks. (3) Rahang turun. (4) Ekspresi netral.", 
+        sound: "sound_a"
+    },
+    i: { 
+        url: "gambar_i.png", 
+        desc: "(1) Mulut menyipit horizontal. (2) Bibir sedikit ditarik ke samping. (3) Bentuk mirip senyum tipis.", 
+        sound: "sound_i"
+    },
+    u: { 
+        url: "gambar_u.png", 
+        desc: "(1) Mulut membulat kecil. (2) Bibir sedikit maju. (3) Seperti meniup lembut.", 
+        sound: "sound_u"
+    },
+    e: { 
+        url: "gambar_e.png", 
+        desc: "(1) Mulut setengah terbuka. (2) Bibir relaks. (3) Rahang sedikit turun.", 
+        sound: "sound_e"
+    },
+    o: { 
+        url: "gambar_o.png", 
+        desc: "(1) Mulut membulat besar. (2) Bibir maju ke depan. (3) Bentuk bulat lebih besar dari U.", 
+        sound: "sound_o"
+    }
+};
+
+
+        // Pastikan musik MATI saat halaman pertama dibuka
+        window.onload = function () {
+            const bg = document.getElementById("bgMusic");
+            bg.pause();
+            bg.currentTime = 0;
+        }
+
+        // Start App + Mulai Musik
+        function startApp() {
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("mainContent").style.display = "block";
+
+            const bg = document.getElementById("bgMusic");
+            bg.volume = 0.8;
+            bg.play(); // Musik mulai disini
+        }
+
+        // Ganti gambar + suara
+        function showImage(key) {
+            document.getElementById("imageBox").src = imageData[key].url;
+            document.getElementById("descText").innerText = imageData[key].desc;
+
+            const sound = document.getElementById(imageData[key].sound);
+            sound.currentTime = 0;
+            sound.play();
+        }
+
+        // Tombol EXIT
+        function exitApp() {
+            window.location.href = "about:blank";
+        }
+
+    </script>
+
+</body>
+</html>
